@@ -41,8 +41,6 @@ const DifficultyMix = ({ entry }) => {
         </span>
       ))}
           
-
-    
     </div>
   );
 };
