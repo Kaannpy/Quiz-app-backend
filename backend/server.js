@@ -7,23 +7,29 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 dotenv.config();
 
-const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET'];
-const missingVars = requiredEnvVars.filter(v => !process.env[v]);
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
+const missingVars = requiredEnvVars.filter((v) => !process.env[v]);
 if (missingVars.length > 0) {
-  console.error(`❌ Gerekli env değişkenleri eksik: ${missingVars.join(', ')}`);
+  console.error(`❌ Gerekli env değişkenleri eksik: ${missingVars.join(", ")}`);
   process.exit(1);
 }
 
 if (process.env.JWT_SECRET.length < 32) {
-  console.warn('⚠️  JWT_SECRET çok kısa, üretim için güçlü bir anahtar kullanın');
+  console.warn(
+    "⚠️  JWT_SECRET çok kısa, üretim için güçlü bir anahtar kullanın",
+  );
 }
 
 connectDB();
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+  ],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 const path = require("path");
