@@ -14,6 +14,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("kullanılan api_base:", API_BASE);
+  
     if (loading || isTransitioning) return;
     setLoading(true);
     setError('');
