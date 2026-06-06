@@ -23,11 +23,7 @@ if (process.env.JWT_SECRET.length < 32) {
 connectDB();
 
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    process.env.FRONTEND_URL,
-  ],
+  origin: true, // SİHİRLİ KELİME: Kim gelirse gelsin kapıyı aç ve kabul et!
   credentials: true,
   optionsSuccessStatus: 200,
 };
