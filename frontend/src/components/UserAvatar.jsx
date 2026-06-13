@@ -11,7 +11,9 @@ const UserAvatar = ({ user, size = "sm", className = "" }) => {
   const name = user?.name || "K";
   const initial = name.trim()[0]?.toUpperCase() || "K";
   const photo = user?.profilePhoto;
-  const src = photo ? `${API_BASE}${photo}` : null;
+  const src = photo
+    ? photo.startsWith("http") ? photo : `${API_BASE}${photo}`
+    : null;
   const sizeClass = sizeMap[size] || sizeMap.sm;
 
   if (src) {
