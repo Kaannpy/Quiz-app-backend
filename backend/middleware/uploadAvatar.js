@@ -1,33 +1,24 @@
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 
-const uploadDir = path.join(__dirname, "../uploads/avatars");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Cloudinary bağlantı ayarları
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || ".jpg";
-    const safeExt = [".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)
-      ? ext
-      : ".jpg";
-    cb(null, `${req.user._id}${safeExt}`);
+// Depolama motoru olarak Cloudinary'yi ayarlıyoruz
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "kaanquiz_avatars", // Cloudinary'de fotoğrafların birikeceği klasörün adı
+    allowed_formats: ["jpg", "jpeg", "png", "webp"], // Sadece resim formatlarına izin ver
+    transformation: [{ width: 500, height: 500, crop: "limit" }], // Yüklenen resmi otomatik optimize et
   },
 });
 
-const uploadAvatar = multer({
-  storage,
-  limits: { fileSize: 2 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    if (/^image\/(jpeg|jpg|png|webp|gif)$/i.test(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Yalnızca JPG, PNG veya WebP yükleyebilirsiniz."));
-    }
-  },
-});
+const uploadAvatar = multer({ storage: storage });
 
 module.exports = uploadAvatar;

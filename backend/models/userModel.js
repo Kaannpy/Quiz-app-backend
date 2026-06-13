@@ -1,10 +1,24 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+const ALLOWED_EMAIL_DOMAINS = ["gmail.com", "hotmail.com", "outlook.com"];
+
 const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (v) {
+          const domain = v.split("@")[1]?.toLowerCase();
+          return ALLOWED_EMAIL_DOMAINS.includes(domain);
+        },
+        message:
+          "Sadece @gmail.com, @hotmail.com veya @outlook.com uzantılı e-postalar kabul edilir.",
+      },
+    },
     password: { type: String, required: true },
     role: { type: String, required: true, default: "user" },
     status: {
@@ -15,6 +29,8 @@ const userSchema = mongoose.Schema(
     school: { type: String, default: "" },
     gradeClass: { type: String, default: "" },
     profilePhoto: { type: String, default: "" },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpire: { type: Date, default: null },
   },
 
   { timestamps: true },

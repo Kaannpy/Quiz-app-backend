@@ -9,6 +9,7 @@ import QuizDetail from "./pages/QuizDetail";
 import AiQuizSolve from "./pages/AiQuizSolve";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import QuizHistory from "./pages/QuizHistory";
 import AdminDashboard from "./pages/AdminDashboard";
 import PdfQuiz from "./pages/PdfQuiz";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<PublicIndex />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/ai-quiz-solve" element={<AiQuizSolve />} />
           <Route path="/quiz/:id" element={<QuizDetail />} />
 
